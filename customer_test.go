@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/hiscaler/gox/jsonx"
-	"github.com/hiscaler/woocommerce-go/entity"
+	"github.com/jmolboy/woocommerce-go/entity"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -26,7 +26,7 @@ func getCustomerId(t *testing.T) {
 
 func TestCustomerService_All(t *testing.T) {
 	params := CustomersQueryParams{}
-	_, _, _,_, err := wooClient.Services.Customer.All(params)
+	_, _, _, _, err := wooClient.Services.Customer.All(params)
 	if err != nil {
 		t.Errorf("wooClient.Services.Customer.All error: %s", err.Error())
 	}

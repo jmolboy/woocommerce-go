@@ -5,7 +5,7 @@ import (
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/hiscaler/gox/jsonx"
 	"github.com/hiscaler/gox/randx"
-	"github.com/hiscaler/woocommerce-go/entity"
+	"github.com/jmolboy/woocommerce-go/entity"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"

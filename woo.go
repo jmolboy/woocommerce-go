@@ -1,6 +1,7 @@
 // Package woocommerce is a Woo Commerce lib.
 //
 // Quick start:
+//
 //	b, err := os.ReadFile("./config/config_test.json")
 //	if err != nil {
 //	   panic(fmt.Sprintf("Read config error: %s", err.Error()))
@@ -30,12 +31,6 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"github.com/go-resty/resty/v2"
-	"github.com/hiscaler/gox/inx"
-	"github.com/hiscaler/gox/stringx"
-	"github.com/hiscaler/woocommerce-go/config"
-	jsoniter "github.com/json-iterator/go"
-	"github.com/json-iterator/go/extra"
 	"log"
 	"net"
 	"net/http"
@@ -45,6 +40,13 @@ import (
 	"strings"
 	"time"
 	"unsafe"
+
+	"github.com/go-resty/resty/v2"
+	"github.com/hiscaler/gox/inx"
+	"github.com/hiscaler/gox/stringx"
+	"github.com/jmolboy/woocommerce-go/config"
+	jsoniter "github.com/json-iterator/go"
+	"github.com/json-iterator/go/extra"
 )
 
 const (
@@ -108,6 +110,12 @@ type services struct {
 	SystemStatus         systemStatusService
 	SystemStatusTool     systemStatusToolService
 	Data                 dataService
+}
+
+func getBasicAuth(username, password string) string {
+	str := username + ":" + password
+	base64 := base64.StdEncoding.EncodeToString([]byte(str))
+	return fmt.Sprintf("Basic %s", base64)
 }
 
 // OAuth signature
@@ -191,9 +199,8 @@ func NewClient(config config.Config) *WooCommerce {
 					params.Add("consumer_key", config.ConsumerKey)
 					params.Add("consumer_secret", config.ConsumerSecret)
 				} else {
-					// Set to header
-					client.SetAuthScheme("Basic").
-						SetAuthToken(fmt.Sprintf("%s %s", config.ConsumerKey, config.ConsumerSecret))
+					request.Header.Add("Content-Type", "application/json")
+					request.Header.Set("Authorization", getBasicAuth(config.ConsumerKey, config.ConsumerSecret))
 				}
 			} else {
 				// oAuth

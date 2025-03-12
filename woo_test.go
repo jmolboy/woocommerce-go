@@ -2,10 +2,12 @@ package woocommerce
 
 import (
 	"fmt"
-	"github.com/hiscaler/woocommerce-go/config"
-	jsoniter "github.com/json-iterator/go"
 	"os"
 	"testing"
+
+	"github.com/jmolboy/woocommerce-go/config"
+	"github.com/jmolboy/woocommerce-go/entity"
+	jsoniter "github.com/json-iterator/go"
 )
 
 var wooClient *WooCommerce
@@ -73,7 +75,7 @@ func getOrderId(t *testing.T) {
 	mainId = items[0].ID
 }
 
-func TestMain(m *testing.M) {
+func TestCreateProd(m *testing.T) {
 	b, err := os.ReadFile("./config/config_test.json")
 	if err != nil {
 		panic(fmt.Sprintf("Read config error: %s", err.Error()))
@@ -85,5 +87,53 @@ func TestMain(m *testing.M) {
 	}
 
 	wooClient = NewClient(c)
-	m.Run()
+
+	req := CreateProductRequest{
+		Name:             "API调用测试测试图片",
+		Slug:             "这是一个slug",
+		Type:             "simple",
+		Status:           "publish",
+		Description:      `测试描述`,
+		ShortDescription: "这是商品的简述",
+		SKU:              "iphone12Plus手机壳",
+		RegularPrice:     88,
+		SalePrice:        58,
+		TaxStatus:        "none",
+		StockQuantity:    10,
+		StockStatus:      "instock",
+		Weight:           "10g",
+		Categories: []entity.ProductCategory{
+			{
+				ID:   1383,
+				Name: "Bags &amp; Backpacks",
+			},
+		},
+		Tags:   []entity.ProductTag{},
+		Images: []entity.ProductImage{},
+		Attributes: []entity.ProductAttribute{
+			{
+				ID:   1,
+				Name: "Coloe",
+				Slug: "pa_color",
+				Type: "select",
+			},
+			{
+				ID:   2,
+				Name: "Size",
+				Slug: "pa_size",
+				Type: "size",
+			},
+		},
+		ParentId:          2483,
+		DefaultAttributes: []entity.ProductDefaultAttribute{},
+		MetaData:          []entity.Meta{},
+	}
+	prod, err := wooClient.Services.Product.Create(req)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("created product: %+v\n", prod)
+
+	// m.Run()
 }
