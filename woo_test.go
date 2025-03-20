@@ -173,7 +173,7 @@ func TestVarProd(m *testing.T) {
 
 	req := CreateProductVariationRequest{
 		Description:   "测试描述",
-		SKU:           "iphone16-black-黑夜传说-B",
+		SKU:           "iphone16-black-黑夜传说-C",
 		RegularPrice:  2,
 		SalePrice:     1,
 		Status:        "publish",
@@ -197,6 +197,11 @@ func TestVarProd(m *testing.T) {
 				Name:   "Spec",
 				Option: "iphone16",
 			},
+		},
+		Dimension: &entity.ProductDimension{
+			Length: "1cm",
+			Width:  "1cm",
+			Height: "1cm",
 		},
 	}
 	prod, err := wooClient.Services.ProductVariation.Create(prodId, req)

@@ -1,9 +1,9 @@
 package entity
 
 type ProductDimension struct {
-	Length float64 `json:"length"`
-	Width  float64 `json:"width"`
-	Height float64 `json:"height"`
+	Length string `json:"length"`
+	Width  string `json:"width"`
+	Height string `json:"height"`
 }
 
 // Product product properties
