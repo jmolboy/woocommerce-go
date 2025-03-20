@@ -1,9 +1,5 @@
 package entity
 
-import (
-	"time"
-)
-
 // ProductVariationAttribute product variation attribute properties
 type ProductVariationAttribute struct {
 	ID     int    `json:"id"`
@@ -14,20 +10,20 @@ type ProductVariationAttribute struct {
 // ProductVariation product variation properties
 type ProductVariation struct {
 	ID                int               `json:"id"`
-	DateCreate        time.Time         `json:"date_create,omitempty"`
-	DateCreateGMT     time.Time         `json:"date_create_gmt,omitempty"`
-	DateModified      time.Time         `json:"date_modified,omitempty"`
-	DateModifiedGMT   time.Time         `json:"date_modified_gmt,omitempty"`
+	DateCreate        string            `json:"date_create,omitempty"`
+	DateCreateGMT     string            `json:"date_create_gmt,omitempty"`
+	DateModified      string            `json:"date_modified,omitempty"`
+	DateModifiedGMT   string            `json:"date_modified_gmt,omitempty"`
 	Description       string            `json:"description"`
 	Permalink         string            `json:"permalink"`
 	SKU               string            `json:"sku"`
-	Price             float64           `json:"price"`
-	RegularPrice      float64           `json:"regular_price"`
-	SalePrice         float64           `json:"sale_price"`
-	DateOnSaleFrom    time.Time         `json:"date_on_sale_from"`
-	DateOnSaleFromGMT time.Time         `json:"date_on_sale_from_gmt"`
-	DateOnSaleTo      time.Time         `json:"date_on_sale_to"`
-	DateOnSaleToGMT   time.Time         `json:"date_on_sale_to_gmt"`
+	Price             string            `json:"price"`
+	RegularPrice      string            `json:"regular_price"`
+	SalePrice         string            `json:"sale_price"`
+	DateOnSaleFrom    string            `json:"date_on_sale_from"`
+	DateOnSaleFromGMT string            `json:"date_on_sale_from_gmt"`
+	DateOnSaleTo      string            `json:"date_on_sale_to"`
+	DateOnSaleToGMT   string            `json:"date_on_sale_to_gmt"`
 	OnSale            bool              `json:"on_sale"`
 	Status            string            `json:"status"`
 	Purchasable       bool              `json:"purchasable"`
@@ -44,7 +40,7 @@ type ProductVariation struct {
 	Backorders        string            `json:"backorders"`
 	BackordersAllowed bool              `json:"backorders_allowed"`
 	Backordered       bool              `json:"backordered"`
-	Weight            float64           `json:"weight"`
+	Weight            string            `json:"weight"`
 	// ProductDimension        *request.VariationDimensionsRequest `json:"dimensions"`
 	ShippingClass   string                      `json:"shipping_class"`
 	ShippingClassId int                         `json:"shipping_class_id"`

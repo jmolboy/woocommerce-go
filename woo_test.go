@@ -1,6 +1,7 @@
 package woocommerce
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"testing"
@@ -89,13 +90,13 @@ func TestCreateProd(m *testing.T) {
 	wooClient = NewClient(c)
 
 	req := CreateProductRequest{
-		Name:             "API调用测试测试图片",
-		Slug:             "这是一个slug",
-		Type:             "simple",
+		Name:             "API调用测试分组",
+		Slug:             "iphone",
+		Type:             "variable",
 		Status:           "publish",
-		Description:      `测试描述`,
+		Description:      `<img src="https://iuufu-pic.oss-cn-qingdao.aliyuncs.com/images/2025-01/b5d3d25e176e43856863460026048138.png"/>`,
 		ShortDescription: "这是商品的简述",
-		SKU:              "iphone12Plus手机壳",
+		SKU:              "iphone手机壳-黑夜传说2",
 		RegularPrice:     88,
 		SalePrice:        58,
 		TaxStatus:        "none",
@@ -108,25 +109,43 @@ func TestCreateProd(m *testing.T) {
 				Name: "Bags &amp; Backpacks",
 			},
 		},
-		Tags:   []entity.ProductTag{},
-		Images: []entity.ProductImage{},
-		Attributes: []entity.ProductAttribute{
+		Tags: []entity.ProductTag{},
+		Images: []entity.ProductImage{
 			{
-				ID:   1,
-				Name: "Coloe",
-				Slug: "pa_color",
-				Type: "select",
+				Src: "https://iuufu-pic.oss-cn-qingdao.aliyuncs.com/images/2025-01/b5d3d25e176e43856863460026048138.png",
 			},
 			{
-				ID:   2,
-				Name: "Size",
-				Slug: "pa_size",
-				Type: "size",
+				Src: "https://iuufu-pic.oss-cn-qingdao.aliyuncs.com/images/2025-01/b5d3d25e176e43856863460026048138.png",
 			},
 		},
-		ParentId:          2483,
+		Attributes: []entity.ProductAttribute{
+			{
+				ID:        1,
+				Name:      "Color",
+				Variation: true,
+				Visible:   true,
+				Slug:      "pa_color",
+				Options: []string{
+					"pink", "black", "red", "yellow",
+				},
+			},
+			{
+				ID:        2,
+				Name:      "Spec",
+				Variation: true,
+				Slug:      "pa_size",
+				Visible:   true,
+				Options: []string{
+					"iphone15", "iphone16", "iphone17", "iphone18",
+				},
+			},
+		},
+		ParentId:          0,
 		DefaultAttributes: []entity.ProductDefaultAttribute{},
 		MetaData:          []entity.Meta{},
+		GroupedProducts:   []int{
+			// 2483, 2485, 2490,
+		},
 	}
 	prod, err := wooClient.Services.Product.Create(req)
 	if err != nil {
@@ -136,4 +155,64 @@ func TestCreateProd(m *testing.T) {
 	fmt.Printf("created product: %+v\n", prod)
 
 	// m.Run()
+}
+
+func TestVarProd(m *testing.T) {
+	b, err := os.ReadFile("./config/config_me.json")
+	if err != nil {
+		panic(fmt.Sprintf("Read config error: %s", err.Error()))
+	}
+	var c config.Config
+	err = jsoniter.Unmarshal(b, &c)
+	if err != nil {
+		panic(fmt.Sprintf("Parse config file error: %s", err.Error()))
+	}
+
+	wooClient = NewClient(c)
+	prodId := 2754
+
+	req := CreateProductVariationRequest{
+		Description:   "测试描述",
+		SKU:           "iphone16-black-黑夜传说-B",
+		RegularPrice:  2,
+		SalePrice:     1,
+		Status:        "publish",
+		TaxStatus:     "taxable",
+		ManageStock:   true,
+		StockQuantity: 10,
+		StockStatus:   "instock",
+		Weight:        1,
+		Image: &entity.ProductImage{
+			Src: "https://iuufu-pic.oss-cn-qingdao.aliyuncs.com/images/2025-01/b5d3d25e176e43856863460026048138.png",
+		},
+		Attributes: []entity.ProductVariationAttribute{
+			{
+				ID:     1,
+				Name:   "Color",
+				Option: "black",
+			},
+
+			{
+				ID:     2,
+				Name:   "Spec",
+				Option: "iphone16",
+			},
+		},
+	}
+	prod, err := wooClient.Services.ProductVariation.Create(prodId, req)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("created product: %+v\n", prod)
+}
+
+func TestVarDecode(t *testing.T) {
+	jsonRaw := ``
+	var prodVar entity.ProductVariation
+	err := json.Unmarshal([]byte(jsonRaw), &prodVar)
+	if err != nil {
+		t.Log(err)
+		t.Fail()
+	}
 }

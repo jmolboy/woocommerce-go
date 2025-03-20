@@ -5,6 +5,6 @@
   "consumer_key": "",
   "consumer_secret": "",
   "add_authentication_to_url": false,
-  "timeout": 10,
+  "timeout": 100,
   "verify_ssl": true
 }
