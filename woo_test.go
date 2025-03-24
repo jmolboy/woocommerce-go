@@ -222,6 +222,28 @@ func TestVarDecode(t *testing.T) {
 	}
 }
 
+func TestShipZoneMethods(t *testing.T) {
+	b, err := os.ReadFile("./config/config_me.json")
+	if err != nil {
+		panic(fmt.Sprintf("Read config error: %s", err.Error()))
+	}
+	var c config.Config
+	err = jsoniter.Unmarshal(b, &c)
+	if err != nil {
+		panic(fmt.Sprintf("Parse config file error: %s", err.Error()))
+	}
+
+	wooClient = NewClient(c)
+	zones, err := wooClient.Services.ShippingZoneMethod.All(2)
+	if err != nil {
+		t.Log(err)
+		t.Fail()
+	}
+
+	fmt.Printf("zones is:%+v\n", zones)
+
+}
+
 func TestShipZone(m *testing.T) {
 	b, err := os.ReadFile("./config/config_me.json")
 	if err != nil {
