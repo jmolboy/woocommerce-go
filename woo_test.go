@@ -169,11 +169,11 @@ func TestVarProd(m *testing.T) {
 	}
 
 	wooClient = NewClient(c)
-	prodId := 2754
+	prodId := 2777
 
 	req := CreateProductVariationRequest{
 		Description:   "测试描述",
-		SKU:           "iphone16-black-黑夜传说-C",
+		SKU:           "dc6833-5-2-4-2",
 		RegularPrice:  2,
 		SalePrice:     1,
 		Status:        "publish",
@@ -189,13 +189,13 @@ func TestVarProd(m *testing.T) {
 			{
 				ID:     1,
 				Name:   "Color",
-				Option: "black",
+				Option: "blue",
 			},
 
 			{
-				ID:     2,
+				ID:     3,
 				Name:   "Spec",
-				Option: "iphone16",
+				Option: "iphone13",
 			},
 		},
 		Dimension: &entity.ProductDimension{
@@ -220,4 +220,31 @@ func TestVarDecode(t *testing.T) {
 		t.Log(err)
 		t.Fail()
 	}
+}
+
+func TestShipZone(m *testing.T) {
+	b, err := os.ReadFile("./config/config_me.json")
+	if err != nil {
+		panic(fmt.Sprintf("Read config error: %s", err.Error()))
+	}
+	var c config.Config
+	err = jsoniter.Unmarshal(b, &c)
+	if err != nil {
+		panic(fmt.Sprintf("Parse config file error: %s", err.Error()))
+	}
+
+	wooClient = NewClient(c)
+	zones, err := wooClient.Services.ShippingZone.All()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, v := range zones {
+		zoneLocations, err := wooClient.Services.ShippingZoneLocation.All(v.ID)
+		if err != nil {
+			continue
+		}
+		fmt.Printf("zone: %+v, locations: %+v\n\n\n", v.Name, zoneLocations)
+	}
+
 }
