@@ -2,6 +2,7 @@ package woocommerce
 
 import (
 	"fmt"
+
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/jmolboy/woocommerce-go/entity"
 	jsoniter "github.com/json-iterator/go"
@@ -18,6 +19,18 @@ func (s shippingZoneMethodService) All(zoneId int) (items []entity.ShippingZoneM
 
 	if resp.IsSuccess() {
 		err = jsoniter.Unmarshal(resp.Body(), &items)
+	}
+	return
+}
+
+func (s shippingZoneMethodService) AllRaw(zoneId int) (raw string, err error) {
+	resp, err := s.httpClient.R().Get(fmt.Sprintf("/shipping/zones/%d/methods", zoneId))
+	if err != nil {
+		return
+	}
+
+	if resp.IsSuccess() {
+		return string(resp.Body()), nil
 	}
 	return
 }
