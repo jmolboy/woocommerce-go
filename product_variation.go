@@ -3,6 +3,7 @@ package woocommerce
 import (
 	"errors"
 	"fmt"
+
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/jmolboy/woocommerce-go/entity"
 	jsoniter "github.com/json-iterator/go"
@@ -209,12 +210,12 @@ type BatchProductVariationsResult struct {
 	Delete []entity.ProductVariation `json:"delete"`
 }
 
-func (s productVariationService) Batch(req BatchProductVariationsRequest) (res BatchProductVariationsResult, err error) {
+func (s productVariationService) Batch(productId int, req BatchProductVariationsRequest) (res BatchProductVariationsResult, err error) {
 	if err = req.Validate(); err != nil {
 		return
 	}
-
-	resp, err := s.httpClient.R().SetBody(req).Post("/products/variations/batch")
+	url := fmt.Sprintf("/products/%d/variations/batch", productId)
+	resp, err := s.httpClient.R().SetBody(req).Post(url)
 	if err != nil {
 		return
 	}
